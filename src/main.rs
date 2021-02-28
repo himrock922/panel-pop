@@ -102,14 +102,15 @@ impl<'a> From<&'a FontDetails> for FontDetails {
   }
 }
 
-pub fn run() -> Result<(), String> {
+pub fn run() -> Result<u32, String> {
   let image_path = String::from("assets/title.png");
-  let font_path = String::from("assets/fonts/square_sans_serif_7.ttf");
+  let font_path = String::from("assets/fonts/PressStart2P.ttf");
+  let main_menus = vec!["1P Endless", "     VS AI", "     VS 2P", "   Options", "      EXIT"];
+
   let sdl_context = sdl2::init()?;
   let video_subsystem = sdl_context.video()?;
   let font_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
   let _image_context = sdl2::image::init(InitFlag::PNG | InitFlag::JPG)?;
-  let main_menus = vec!["1P Endless", "     VS AI", "     VS 2P", "   Options", "      EXIT"];
 
   let window = video_subsystem
     .window("panel-pop", 800, 600)
@@ -127,7 +128,7 @@ pub fn run() -> Result<(), String> {
   let mut font_manager = FontManager::new(&font_context);
   let details = FontDetails {
     path: font_path.clone(),
-    size: 10,
+    size: 16,
   };
 
   // will load the image texture + font only once
@@ -138,8 +139,8 @@ pub fn run() -> Result<(), String> {
   canvas.clear();
   canvas.copy(&texture, None, None)?;
 
-  let main_menu_x = 600;
-  let mut main_menu_y = 250;
+  let x = 500;
+  let mut y = 250;
   for menu in main_menus.iter() {
     // not recommended to create a texture from the font each iteration
     // but it is the simplest thing to do for this example
@@ -150,8 +151,8 @@ pub fn run() -> Result<(), String> {
     let font_texture = texture_creator
       .create_texture_from_surface(&surface)
       .map_err(|e| e.to_string())?;
-    canvas.copy(&font_texture, None, rect!(main_menu_x, main_menu_y, 125, 25))?;
-    main_menu_y += 19;
+    canvas.copy(&font_texture, None, rect!(x, y, 250, 20))?;
+    y += 25;
   }
   canvas.present();
 
@@ -168,7 +169,7 @@ pub fn run() -> Result<(), String> {
     }
   }
 
-  Ok(())
+  Ok(200)
 }
 
 fn main() {
